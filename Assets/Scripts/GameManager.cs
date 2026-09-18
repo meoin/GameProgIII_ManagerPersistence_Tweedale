@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -65,5 +66,25 @@ public class GameManager : MonoBehaviour
         UIManager.SetHealthDisplay(Health);
         UIManager.SetScoreDisplay(Score);
         UIManager.SetXPDisplay(Xp);
+    }
+
+    public void ToggleUI(bool toggle) 
+    {
+        UIManager.gameObject.SetActive(toggle);
+    }
+
+    public void StartGame() 
+    {
+        SceneManager.LoadScene("StartRoom");
+        ToggleUI(true);
+    }
+
+    public void QuitGame() 
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                Application.Quit();
+        #endif
     }
 }

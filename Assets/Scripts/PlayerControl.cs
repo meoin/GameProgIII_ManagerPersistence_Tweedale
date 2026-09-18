@@ -6,6 +6,8 @@ public class PlayerControl : MonoBehaviour
     private float moveInput;
     public float speed = 5f;
     public float jumpStrength = 5f;
+    public float runMultiplier = 1.5f;
+    private bool running = false;
     private Rigidbody2D rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,18 +23,35 @@ public class PlayerControl : MonoBehaviour
 
         velocity.x = moveInput * speed;
 
+        if (running) velocity.x *= runMultiplier;
+
         rb.linearVelocity = velocity;
     }
 
-    public void OnMove(InputValue input) 
+    public void OnMove(InputAction.CallbackContext context) 
     {
-        moveInput = input.Get<float>();
+        moveInput = context.ReadValue<float>();
     }
 
-    public void OnJump() 
+    public void OnJump(InputAction.CallbackContext context) 
     {
-        Debug.Log("Player jumped");
+        if (context.started) 
+        {
+            rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+        }
+        else if (context.canceled) 
+        {
+            Vector2 velocity = rb.linearVelocity;
 
-        rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+            if (velocity.y > 0) velocity.y = 0;
+
+            rb.linearVelocity = velocity;
+        }
+    }
+
+    public void OnSprint(InputAction.CallbackContext context) 
+    {
+        if (context.started) running = true;
+        else if (context.canceled) running = false;
     }
 }

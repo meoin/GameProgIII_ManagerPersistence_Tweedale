@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,8 +8,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     [SerializeField] private UIManager UIManager;
     public PlayerControl Player;
+    public FollowCamera Camera;
     public bool MaintainY;
     public string TransitionPoint = "DEFAULT";
+    public string CurrentRoom = "StartRoom";
+    public List<string> LoadedScenes = new List<string>();
 
     private int _health = 100;
     public int Health
@@ -78,8 +83,21 @@ public class GameManager : MonoBehaviour
 
     public void StartGame() 
     {
-        SceneManager.LoadScene("StartRoom");
+        LoadScene(CurrentRoom, false);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        Player.gameObject.SetActive(true);
         ToggleUI(true);
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"Scene {scene.name} is fully loaded!");
+
+        if (scene.name == CurrentRoom) 
+        {
+            GameObject.Find(CurrentRoom).GetComponent<RoomActivation>().ActivateRoom();
+        }
     }
 
     public void QuitGame() 
@@ -89,5 +107,18 @@ public class GameManager : MonoBehaviour
         #else
                 Application.Quit();
         #endif
+    }
+
+    public void LoadScene(string sceneName, bool additive) 
+    {
+        if (additive) SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+        else SceneManager.LoadScene(sceneName);
+
+        LoadedScenes.Add(sceneName);
+    }
+
+    public void UnloadScene(string sceneName) 
+    {
+        SceneManager.UnloadSceneAsync(sceneName);
     }
 }

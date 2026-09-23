@@ -5,6 +5,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     [SerializeField] private UIManager UIManager;
+    public PlayerControl Player;
+    public bool MaintainY;
+    public string TransitionPoint = "DEFAULT";
 
     private int _health = 100;
     public int Health

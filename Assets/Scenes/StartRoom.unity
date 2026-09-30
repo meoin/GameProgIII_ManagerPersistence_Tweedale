@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 491876902}
   - component: {fileID: 491876901}
   m_Layer: 0
-  m_Name: Level
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5022,7 +5022,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6104207623494963582, guid: a4acd61bae62a154c833bed276045e88, type: 3}
       propertyPath: ID
-      value: Right
+      value: StartRight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6496,7 +6496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3908303746756288483, guid: 71840e120dc6ef64b92f7e14c9ee412f, type: 3}
       propertyPath: DestinationID
-      value: Left
+      value: RoomTwoLeft
       objectReference: {fileID: 0}
     - target: {fileID: 8654979016029239977, guid: 71840e120dc6ef64b92f7e14c9ee412f, type: 3}
       propertyPath: m_LocalPosition.x

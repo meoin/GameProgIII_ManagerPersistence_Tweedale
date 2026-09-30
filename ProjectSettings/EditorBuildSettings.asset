@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RoomTwo.unity
     guid: 8265e26eff5e76045bc1bd30dc69908f
+  - enabled: 1
+    path: Assets/Scenes/Underground.unity
+    guid: 2ea76bde2ab195748a1fcf40e377c1e9
+  - enabled: 1
+    path: Assets/Scenes/TheWall.unity
+    guid: 88f97047a9aaf324c9f632925eee1b90
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

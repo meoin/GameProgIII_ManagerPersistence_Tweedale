@@ -1,3 +1,4 @@
+using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,23 +10,51 @@ public class PlayerControl : MonoBehaviour
     public float runMultiplier = 1.5f;
     private bool running = false;
     private Rigidbody2D rb;
+    private Animator animator;
+    private SpriteRenderer renderer;
+
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private Transform groundCheckPoint;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        renderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
+
         Vector2 velocity = rb.linearVelocity;
 
         velocity.x = moveInput * speed;
 
-        if (running) velocity.x *= runMultiplier;
+        animator.SetBool("Moving", Mathf.Abs(velocity.x) > 0);
 
-        rb.linearVelocity = velocity;
+        if (velocity.x < 0) renderer.flipX = true;
+        else if (velocity.x > 0) renderer.flipX = false;
+
+        if (running)
+        {
+            velocity.x *= runMultiplier;
+            if (Mathf.Abs(velocity.x) > 0)
+            {
+                animator.speed = 2.0f;
+            }
+        }
+        else 
+        {
+            animator.speed = 1.0f;
+        }
+
+
+            rb.linearVelocity = velocity;
     }
 
     public void OnMove(InputAction.CallbackContext context) 
@@ -35,7 +64,7 @@ public class PlayerControl : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context) 
     {
-        if (context.started) 
+        if (context.started && isGrounded) 
         {
             rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
         }

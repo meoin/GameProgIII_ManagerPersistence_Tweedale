@@ -33,7 +33,10 @@ public class RoomTransition : MonoBehaviour
 
     private void DrawGizmo()
     {
-        Gizmos.color = Color.purple;
+        Color color = Color.purple;
+        color.a = 0.5f;
+
+        Gizmos.color = color;
 
         // Get the BoxCollider component
         BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();

@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -13,6 +15,7 @@ public class GameManager : MonoBehaviour
     public string TransitionPoint = "DEFAULT";
     public string CurrentRoom = "StartRoom";
     public List<string> LoadedScenes = new List<string>();
+    public bool Paused = false;
 
     private int _health = 100;
     public int Health
@@ -78,16 +81,18 @@ public class GameManager : MonoBehaviour
 
     public void ToggleUI(bool toggle) 
     {
-        UIManager.gameObject.SetActive(toggle);
+        UIManager.ToggleGameplayUI(toggle);
     }
 
     public void StartGame() 
     {
         LoadScene(CurrentRoom, false);
         SceneManager.sceneLoaded += OnSceneLoaded;
-        
+
+        Time.timeScale = 1f;
         Player.gameObject.SetActive(true);
         ToggleUI(true);
+        Paused = false;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -120,5 +125,46 @@ public class GameManager : MonoBehaviour
     public void UnloadScene(string sceneName) 
     {
         SceneManager.UnloadSceneAsync(sceneName);
+    }
+
+    public void TogglePause(InputAction.CallbackContext context) 
+    {
+        if (!context.started) return;
+
+        if (Paused) ResumeGame();
+        else PauseGame();
+    }
+
+    public void PauseGame() 
+    {
+        Time.timeScale = 0f;
+        UIManager.ToggleGameplayUI(false);
+        UIManager.TogglePauseMenu(true);
+        Paused = true;
+    }
+
+    public void ResumeGame() 
+    {
+        Time.timeScale = 1f;
+        UIManager.ToggleGameplayUI(true);
+        UIManager.TogglePauseMenu(false);
+        Paused = false;
+    }
+
+    public void ReturnToMenu() 
+    {
+        Time.timeScale = 0f;
+        UIManager.ToggleGameplayUI(false);
+        UIManager.TogglePauseMenu(false);
+        Player.gameObject.SetActive(false);
+        Paused = false;
+
+        SceneManager.LoadScene("Menu");
+        foreach (string scene in LoadedScenes) 
+        {
+            UnloadScene(scene);
+        }
+
+        LoadedScenes.Clear();
     }
 }

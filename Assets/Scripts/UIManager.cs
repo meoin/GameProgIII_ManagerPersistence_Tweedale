@@ -6,18 +6,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthDisplay;
     [SerializeField] private TextMeshProUGUI scoreDisplay;
     [SerializeField] private TextMeshProUGUI xpDisplay;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField] private GameObject GameplayPanel;
+    [SerializeField] private GameObject PausePanel;
 
     public void SetHealthDisplay(int hp) 
     {
@@ -30,5 +20,15 @@ public class UIManager : MonoBehaviour
     public void SetXPDisplay(int score)
     {
         xpDisplay.text = "XP: " + score;
+    }
+
+    public void ToggleGameplayUI(bool toggle) 
+    {
+        GameplayPanel.gameObject.SetActive(toggle);
+    }
+
+    public void TogglePauseMenu(bool toggle) 
+    {
+        PausePanel.gameObject.SetActive(toggle);
     }
 }

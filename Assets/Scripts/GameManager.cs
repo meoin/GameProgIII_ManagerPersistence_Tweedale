@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     [SerializeField] private UIManager UIManager;
+    [SerializeField] private SaveManager SaveManager;
     public PlayerControl Player;
     public FollowCamera Camera;
     public bool MaintainY;
@@ -48,6 +49,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         DontDestroyOnLoad(gameObject);
+
+        LoadFromSave();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -166,5 +169,32 @@ public class GameManager : MonoBehaviour
         }
 
         LoadedScenes.Clear();
+
+        SaveGame();
+    }
+
+    public void LoadFromSave() 
+    {
+        SaveData data = SaveManager.LoadGame();
+        if (data.CurrentRoom == null) return;
+
+        Xp = data.XP;
+        Health = data.Health;
+        Score = data.Score;
+        CurrentRoom = data.CurrentRoom;
+        TransitionPoint = data.LastTransitionID;
+    }
+
+    public void SaveGame() 
+    {
+        SaveData data = new SaveData();
+
+        data.XP = Xp;
+        data.Health = Health;
+        data.Score = Score;
+        data.CurrentRoom = CurrentRoom;
+        data.LastTransitionID = TransitionPoint;
+
+        SaveManager.SaveGame(data);
     }
 }
